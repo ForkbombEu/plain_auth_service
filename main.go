@@ -30,9 +30,8 @@ func loadUsersFromCSV(db *sql.DB, filename string) error {
         return err
     }
 
-    // Start from the second record to skip the header
-    for _, record := range records[1:] {
-        _, err := db.Exec("INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)", record[0], record[1])
+    for _, record := range records[1:] { // Skip the header
+        _, err := db.Exec("INSERT OR REPLACE INTO users (username, password) VALUES (?, ?)", record[0], record[1])
         if err != nil {
             return err
         }
@@ -59,12 +58,6 @@ func main() {
         log.Fatal(err)
     }
 
-    // Load users from CSV file
-    err = loadUsersFromCSV(db, "users.csv")
-    if err != nil {
-        log.Fatal(err)
-    }
-
     // Define the handler
     http.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
         if r.Method != http.MethodPost {
@@ -72,8 +65,15 @@ func main() {
             return
         }
 
+        // Reload users from CSV file
+        err := loadUsersFromCSV(db, "users.csv")
+        if err != nil {
+            http.Error(w, "Internal server error", http.StatusInternalServerError)
+            return
+        }
+
         var user User
-        err := json.NewDecoder(r.Body).Decode(&user)
+        err = json.NewDecoder(r.Body).Decode(&user)
         if err != nil {
             http.Error(w, "Bad request", http.StatusBadRequest)
             return
