@@ -42,6 +42,44 @@ curl http://test.auth.forkbomb.eu:8080/auth \
     -d '{"username":"admin", "password":"admin123"}'
 ```
 
+## Slangroom usage
+
+#### `auth.slang`
+
+```json 
+{
+  "address": "http://test.auth.forkbomb.eu:8080/auth",
+  "auth": {
+    "username":"admin",
+    "password":"admin123"
+  }
+}
+```
+#### `auth.data.json`
+
+```gherkin
+Rule unknown ignore
+Given I connect to 'address' and send object 'auth' and do post and output into 'result'
+Given I have a 'string dictionary' named 'result'
+Then print the 'result'
+```
+#### use with `slangroom-exec`
+
+```bash
+slexfe -F auth | slangroom-exec | jq
+```
+
+expected output:
+
+```json
+{
+  "result": {
+    "result": "Success",
+    "status": "200"
+  }
+}
+```
+
 ## Response
 
 - `200 OK` with message `Success` if the credentials are correct.
