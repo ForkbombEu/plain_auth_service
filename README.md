@@ -36,9 +36,10 @@ The server will start on `localhost:8080`.
 Send a POST request to the `/auth` endpoint with a JSON body containing the username and password.
 
 Example:
-    ```sh
-    curl -X POST -d '{"username":"admin", "password":"admin123"}' -H "Content-Type: application/json" http://localhost:8080/auth
-    ```
+
+```bash
+curl -d '{"username":"admin", "password":"admin123"}' http://test.auth.forkbomb.eu:8080/auth
+```
 
 ## Response
 
