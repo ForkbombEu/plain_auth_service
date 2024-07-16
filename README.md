@@ -38,9 +38,8 @@ Send a POST request to the `/auth` endpoint with a JSON body containing the user
 Example:
 
 ```bash
-curl -d \
-   '{"username":"admin", "password":"admin123"}' \
-   http://test.auth.forkbomb.eu:8080/auth
+curl http://test.auth.forkbomb.eu:8080/auth \
+    -d '{"username":"admin", "password":"admin123"}'
 ```
 
 ## Response
